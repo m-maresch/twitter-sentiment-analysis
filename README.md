@@ -1,7 +1,7 @@
 # Twitter Sentiment Analysis
-Analysing the sentiment of tweets using a Streaming Architecture.
+**Analysing** the **sentiment of tweets** using a **Streaming Architecture**.
 
-This project is currently under development.
+This project is currently **under development**.
 
 If you have any questions about the application or you'd like to know how to run it then feel free to contact me via [mmaresch.com](http://mmaresch.com).
 
