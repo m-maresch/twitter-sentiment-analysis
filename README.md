@@ -5,7 +5,7 @@ This project is **under development**.
 
 Currently working on: Building a Minimum Viable Product
 
-See the Frontend and Backend folders respectivly for progress.
+See the Frontend and Backend folders respectively for progress.
 
 The Deployment folder contains a docker-compose.yml file for spinning up the necessary infrastructure for a development environment.
 
