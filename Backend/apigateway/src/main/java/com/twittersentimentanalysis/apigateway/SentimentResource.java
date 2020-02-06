@@ -49,7 +49,7 @@ class SentimentResource {
                     // Set up Twitter API Client
                     StatusesFilterEndpoint hosebirdEndpoint = new StatusesFilterEndpoint();
 
-                    // Look for Tweets with any of the submitted hashtags
+                    // Look for tweets with any of the submitted hashtags
                     hosebirdEndpoint.trackTerms(hashtags);
 
                     return new ClientBuilder()

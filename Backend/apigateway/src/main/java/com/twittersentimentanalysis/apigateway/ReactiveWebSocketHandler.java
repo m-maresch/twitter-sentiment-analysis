@@ -41,7 +41,9 @@ class ReactiveWebSocketHandler implements WebSocketHandler {
                         }
                     }
 
-                    //Returns one big result for now, will be changed to streaming
+                    // Analyse tweets here
+
+                    // Returns one big result for now, will be changed to streaming
                     return webSocketSession.send(Flux.fromIterable(list)
                         .map(webSocketSession::textMessage)
                         .doOnComplete(() -> {
