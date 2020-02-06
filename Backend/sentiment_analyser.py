@@ -1,6 +1,10 @@
 import sys
 
+# Not used in the MVP 
+# Contains the basic setup for a Spark Structured Streaming job which will be integrated into the application architecture
+
 if __name__ == "__main__":
+    # Kafka connection details, configured via command-line arguments
     host = sys.argv[1]
     port = sys.argv[2]
     input_topic = sys.argv[3]

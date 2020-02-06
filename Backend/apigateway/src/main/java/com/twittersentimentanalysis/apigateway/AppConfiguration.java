@@ -11,12 +11,14 @@ import org.springframework.web.reactive.socket.server.support.WebSocketHandlerAd
 import java.util.HashMap;
 import java.util.Map;
 
+// Split up in multiple classes if it grows too big
 @Configuration
 public class AppConfiguration {
 
     @Autowired
     WebSocketHandler webSocketHandler;
 
+    // Sets up the WebSocket endpoint at /sentiment
     @Bean
     public HandlerMapping webSocketHandlerMapping() {
         Map<String, WebSocketHandler> map = new HashMap<>();
