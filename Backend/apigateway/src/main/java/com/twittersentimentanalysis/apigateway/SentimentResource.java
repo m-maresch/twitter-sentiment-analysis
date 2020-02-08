@@ -18,6 +18,7 @@ import reactor.util.function.Tuples;
 import java.util.List;
 
 // Basically the Web app sends a POST request to this endpoint and then connects to the WebSocket endpoint
+@CrossOrigin({"http://localhost:3000"})
 @RequestMapping(path = "/api/sentiment")
 @RestController
 class SentimentResource {
@@ -40,7 +41,7 @@ class SentimentResource {
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public Mono<Void> get(@RequestParam(value = "hashtags", required = true) List<String> hashtags) {
+    public Mono<Void> post(@RequestParam(value = "hashtags", required = true) List<String> hashtags) {
         // Contains the responses from the Twitter Streaming API
         final TweetsQueue tweetsQueue = new TweetsQueue(1000);
 
@@ -52,6 +53,9 @@ class SentimentResource {
                     // Look for tweets with any of the submitted hashtags
                     hosebirdEndpoint.trackTerms(hashtags);
 
+                    //For testing
+                    tweetsQueue.addAll(hashtags);
+
                     return new ClientBuilder()
                         .hosts(httpHosts)
                         .authentication(new OAuth1(consumerKey, consumerSecret, token, tokenSecret))
@@ -59,7 +63,7 @@ class SentimentResource {
                         .processor(new StringDelimitedProcessor(tweetsQueue));
                 })
                 .map(ClientBuilder::build)
-                .doOnNext(BasicClient::connect)
+                //.doOnNext(BasicClient::connect)
                 .doOnNext(hosebirdClient -> requestsMap.put(hashtags.stream()
                     .reduce((s1, s2) -> s1 + s2) // Concatenate all hashtags to one string used as the key
                     .orElseThrow(() -> new RuntimeException(new IllegalArgumentException())),

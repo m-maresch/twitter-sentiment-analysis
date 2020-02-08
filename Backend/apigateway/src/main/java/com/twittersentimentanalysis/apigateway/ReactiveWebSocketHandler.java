@@ -23,6 +23,7 @@ class ReactiveWebSocketHandler implements WebSocketHandler {
     public Mono<Void> handle(WebSocketSession webSocketSession) {
         return webSocketSession.receive()
                 .map(WebSocketMessage::getPayloadAsText)
+                .map(text -> text.substring(1, text.length()-1)) // Remove double "
                 .map(key -> Tuples.of(key, requestsMap.get(key))) // Use the concatenated hashtags to get the Client and response queue
                 .flatMap(values -> {
                     // Destruct data
@@ -33,7 +34,7 @@ class ReactiveWebSocketHandler implements WebSocketHandler {
                     var list = new ArrayList<String>();
 
                     // Aggregate the tweets
-                    while (!client.isDone()) {
+                    while (!tweetsQueue.isEmpty()) {
                         try {
                             list.add(tweetsQueue.take());
                         } catch (InterruptedException ex) {
@@ -48,7 +49,7 @@ class ReactiveWebSocketHandler implements WebSocketHandler {
                         .map(webSocketSession::textMessage)
                         .doOnComplete(() -> {
                             // Cleanup
-                            client.stop();
+                            //client.stop();
                             requestsMap.remove(key);
                         }));
                 })
