@@ -4,7 +4,7 @@ import {webSocket} from "rxjs/webSocket";
 import Button from '@material-ui/core/Button';
 
 // Set up for testing whether the basic dataflow is working correctly
-// Integration tests follow after the MVP is done (in the Backend application)
+// Integration tests follow after the MVP is done
 function App() {
   const [wss] = useState(webSocket({url: 'ws://localhost:8080/sentiment', deserializer: msg => msg.data}))
 
