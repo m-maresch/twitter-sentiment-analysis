@@ -1,37 +1,27 @@
 package com.twittersentimentanalysis.apigateway;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.reactive.HandlerMapping;
-import org.springframework.web.reactive.handler.SimpleUrlHandlerMapping;
-import org.springframework.web.reactive.socket.WebSocketHandler;
-import org.springframework.web.reactive.socket.server.support.WebSocketHandlerAdapter;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
+import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
+import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
 // Split up in multiple classes if it grows too big
 @Configuration
-public class AppConfiguration {
+@EnableWebSocketMessageBroker
+public class AppConfiguration implements WebSocketMessageBrokerConfigurer {
 
-    @Autowired
-    WebSocketHandler webSocketHandler;
+    // Configure Stomp
 
-    // Sets up the WebSocket endpoint at /sentiment
-    @Bean
-    public HandlerMapping webSocketHandlerMapping() {
-        Map<String, WebSocketHandler> map = new HashMap<>();
-        map.put("/sentiment", webSocketHandler);
-
-        SimpleUrlHandlerMapping handlerMapping = new SimpleUrlHandlerMapping();
-        handlerMapping.setOrder(-1);
-        handlerMapping.setUrlMap(map);
-        return handlerMapping;
+    @Override
+    public void configureMessageBroker(MessageBrokerRegistry registry) {
+        registry.setApplicationDestinationPrefixes("/api")
+                .enableSimpleBroker("/analysed-sentiment");
     }
 
-    @Bean
-    public WebSocketHandlerAdapter handlerAdapter() {
-        return new WebSocketHandlerAdapter();
+    @Override
+    public void registerStompEndpoints(StompEndpointRegistry registry) {
+        registry.addEndpoint("/socket")
+                .setAllowedOrigins("http://localhost:3000");
     }
 }
