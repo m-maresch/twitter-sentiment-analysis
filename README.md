@@ -15,9 +15,8 @@ If you have any questions about the applications or you'd like to know how to ru
 Thanks to everyone contributing to any of the following projects:
 - Any Spring project
 - Lombok
-- Reactor
 - Hosebird Client
 - React
-- RxJS
 - Material-UI
+- STOMP.js
 - PySpark
