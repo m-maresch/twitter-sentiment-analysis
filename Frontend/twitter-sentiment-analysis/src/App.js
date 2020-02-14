@@ -1,56 +1,81 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import Button from '@material-ui/core/Button';
-import {Client} from '@stomp/stompjs';
+import TextField from '@material-ui/core/TextField';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import { styles } from "./Props";
+import { withStyles } from '@material-ui/core/styles';
+import { Client } from '@stomp/stompjs';
 
 // Set up for testing whether the basic dataflow is working correctly
 // Integration tests follow after the MVP is done
-function App() {
+const App = (props) => {
+  const [hashtags, setHashtags] = useState('');
+
+  const [results, setResults] = useState([]);
+
+  const { classes } = props;
+
   const client = new Client({
     brokerURL: "ws://localhost:8080/socket",
-    debug: function (str) {
-      console.log(str);
-    },
     reconnectDelay: 5000,
     heartbeatIncoming: 4000,
     heartbeatOutgoing: 4000
   });
-  
-  client.onConnect = function(frame) {
-    client.subscribe("/analysed-sentiment", (message) => console.log(message.body))
-  };
-  
-  client.onStompError = function (frame) {
-    console.log('Broker reported error: ' + frame.headers['message']);
-    console.log('Additional details: ' + frame.body);
-  };
-  
-  client.activate();
-  
+
   const [ws] = useState(client)
 
-  const hashtags = "test,test1,test2"
+  useEffect(() => {
+    ws.onConnect = (frame) => ws.subscribe("/analysed-sentiment", (message) => setResults(res  => [...res, message.body]))
+    
+    ws.activate();
+  }, [ws]);   
+
+  const sendHashtags = (event) => {
+    fetch('http://localhost:8080/api/sentiment?hashtags=' + hashtags, 
+    { 
+      method: 'POST', 
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then((response) => {
+      ws.publish({destination: '/api/send/hashtags', body: hashtags.split(',').join('')});
+    })
+
+    event.preventDefault();
+  }
 
   return (
     <div className="App">
-      <Button variant="contained" color="primary" onClick={() => {
-        fetch('http://localhost:8080/api/sentiment?hashtags=' + hashtags, 
-          { 
-            method: 'POST', 
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          })
-          .then((response) => {
-            console.log(response)
-            ws.publish({destination: '/api/send/hashtags', body: hashtags.split(',').join('')});
-          }) 
-        }
-      }>
-        Test
-      </Button>
+      <form className={classes.container} noValidate onSubmit={sendHashtags}>
+          <TextField
+              id="hashtags"
+              className={classes.textField}
+              label="Enter Twitter #'s"
+              value={hashtags}
+              onChange={(e) => setHashtags(e.target.value)}
+              margin="normal"
+          />
+          <Button className={classes.button} variant="contained" color="primary" type="submit">
+              Analyse
+          </Button>
+      </form>      
+      <List component="nav" aria-label="main mailbox folders">      
+      {        
+        results.map((res, i) => {
+          return (
+            <ListItem button key={i}>
+              <ListItemText primary={res} />
+            </ListItem>
+          )
+        })
+      }
+      </List>
     </div>
   );
 }
 
-export default App;
+export default withStyles(styles)(App);
