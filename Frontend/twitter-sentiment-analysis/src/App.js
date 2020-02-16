@@ -5,9 +5,11 @@ import TextField from '@material-ui/core/TextField';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import Grid from '@material-ui/core/Grid';
 import { styles } from "./Props";
 import { withStyles } from '@material-ui/core/styles';
 import { Client } from '@stomp/stompjs';
+import AnalysedTweetsChart from './AnalysedTweetsChart'
 
 // Set up for testing whether the basic dataflow is working correctly
 // Integration tests follow after the MVP is done
@@ -30,7 +32,11 @@ const App = (props) => {
   useEffect(() => {
     ws.onConnect = (frame) => ws.subscribe("/analysed-sentiment", (message) => setResults(res  => [...res, message.body]))
     
-    ws.activate();
+    ws.activate()
+
+    return () => {
+      ws.deactivate()
+    }
   }, [ws]);   
 
   const sendHashtags = (event) => {
@@ -42,27 +48,32 @@ const App = (props) => {
       }
     })
     .then((response) => {
-      ws.publish({destination: '/api/send/hashtags', body: hashtags.split(',').join('')});
+      ws.publish({destination: '/api/send/hashtags', body: hashtags.split(',')
+        .join('')
+        .split(' ')
+        .join('')})
     })
 
-    event.preventDefault();
+    event.preventDefault()
   }
 
   return (
     <div className="App">
-      <form className={classes.container} noValidate onSubmit={sendHashtags}>
-          <TextField
-              id="hashtags"
-              className={classes.textField}
-              label="Enter Twitter #'s"
-              value={hashtags}
-              onChange={(e) => setHashtags(e.target.value)}
-              margin="normal"
-          />
-          <Button className={classes.button} variant="contained" color="primary" type="submit">
-              Analyse
-          </Button>
-      </form>      
+      <Grid container justify = "center">
+        <form className={classes.container} noValidate onSubmit={sendHashtags}>
+            <TextField
+                id="hashtags"
+                className={classes.textField}
+                label="Enter Twitter #'s (e.g. #something1, #something2, #something3,...)"
+                value={hashtags}
+                onChange={(e) => setHashtags(e.target.value)}
+                margin="normal"
+            />
+            <Button className={classes.button} variant="contained" color="primary" type="submit">
+                Analyse
+            </Button>
+        </form>  
+      </Grid>    
       <List component="nav" aria-label="main mailbox folders">      
       {        
         results.map((res, i) => {
@@ -74,6 +85,19 @@ const App = (props) => {
         })
       }
       </List>
+      <AnalysedTweetsChart
+      data={[
+        {
+          "name": "Something 1",
+          "value": 20
+        },
+        {
+          "name": "Something 2",
+          "value": 30
+        }
+      ]}
+      title={'Test'}
+      />
     </div>
   );
 }

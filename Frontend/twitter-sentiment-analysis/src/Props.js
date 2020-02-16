@@ -7,11 +7,11 @@ export const styles = (theme) =>
             flexWrap: 'wrap',
         },
         textField: {
-            marginLeft: theme.spacing.unit,
-            marginRight: theme.spacing.unit,
-            width: 200,
+            marginLeft: theme.spacing(1),
+            marginRight: theme.spacing(1),
+            width: 500,
         },
         button: {
-            margin: theme.spacing.unit,
+            margin: theme.spacing(1),
         },
-    });
+    })

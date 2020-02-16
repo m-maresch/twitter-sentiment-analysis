@@ -39,7 +39,7 @@ class SentimentResource {
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public void post(@RequestParam(value = "hashtags", required = true) List<String> hashtags) {
+    public void post(@RequestParam(value = "hashtags") List<String> hashtags) {
         // Contains the responses from the Twitter Streaming API
         final var tweetsQueue = new TweetsQueue(1000);
 
