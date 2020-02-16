@@ -18,5 +18,6 @@ Thanks to everyone contributing to any of the following projects:
 - Hosebird Client
 - React
 - Material-UI
+- Chart.js
 - STOMP.js
 - PySpark
