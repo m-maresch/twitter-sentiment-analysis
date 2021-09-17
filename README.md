@@ -1,7 +1,7 @@
 # Twitter Sentiment Analysis
-**Analysing** the **sentiment of tweets** using a **Streaming Architecture**.
+Analysing the sentiment of tweets using a Streaming Architecture.
 
-This project is **under development**.
+This project is under development.
 
 Currently working on: Building a Minimum Viable Product
 
