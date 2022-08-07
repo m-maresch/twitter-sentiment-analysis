@@ -14,25 +14,28 @@ class AnalysedTweetsChart extends React.Component {
                 scales: {
                     yAxes: [{
                         ticks: {
-                            min: 0,
-                            max: 100
+                            min: this.props.dataMin,
+                            max: this.props.dataMax
                         }
                     }]
                 }
             },
             data: {
-                labels: this.props.data.map(d => d.label),
+                labels: [],
                 datasets: [{
-                    label: this.props.title,
-                    data: this.props.data.map(d => d.value)
+                    label: this.props.label,
+                    fill: false,
+                    borderColor: this.props.color,
+                    data: this.props.data
                 }]
             }
         })
     }
 
     componentDidUpdate() {
-        this.chart.data.labels = this.props.data.map(d => d.label)
-        this.chart.data.datasets[0].data =  this.props.data.map(d => d.value)
+        this.chart.data.labels = Array(this.props.data.length).fill().map((_, i) => '' + i)
+        this.chart.data.datasets[0].data = this.props.data
+
         this.chart.update()
     }
 
