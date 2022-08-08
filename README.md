@@ -1,9 +1,7 @@
 # Twitter Stream Processing for Sentiment Analysis
 Analysing the sentiment of live tweet streams.
 
-The `application.properties` file of the API Gateway contains the property `twitter.token` which you need set to your Twitter token (a bearer token).
-
-These are used to access the Twitter API (receiving a tweet stream, managing the rules for filtering the stream).
+The `application.properties` file of the API Gateway contains the property `twitter.token` which you need set to your Twitter token (a bearer token). This is used to access the Twitter API (receiving a tweet stream, managing the rules for filtering the stream).
 
 The `Deployment/dev` folder contains a `docker-compose.yml` file for spinning up most of the necessary infrastructure for a development environment. Note that Spark is not part of the docker-compose setup. 
 
