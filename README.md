@@ -1,9 +1,9 @@
 # Twitter Stream Processing for Sentiment Analysis
 Analysing the sentiment of live tweet streams.
 
-This repository contains a software which leverages stream processing techniques to analyze a the sentiment of a live stream of tweets related to hashtags in real-time. The project consists of a Web-App, an API Gateway and a sentiment analyzer job. In the Web-App, the user enters hashtags and submits them to start receiving tweets with those hashtags. A visualization of the real-time sentiment results is shown in the UI, along with the tweets which were analyzed.
+This repository contains a software which leverages stream processing techniques to analyze the sentiment of a live stream of tweets related to given hashtags. The project consists of a Web-App, an API Gateway and a sentiment analyzer job. In the Web-App, the user enters hashtags and submits them to start receiving tweets with those hashtags. A visualization of the real-time sentiment results is shown in the UI, along with the tweets which were analyzed.
 
-The 3 components of the software work together in the following way: The Web-App sends the hashtags to the API Gateway. The Gateway has an active connection to the Twitter API and updates the rules of the Twitter API to receive a stream of tweets based on the requested hashtags. Those tweets are sent to a Kafka topic. The sentiment analyzer job reads these tweets, analyzes their sentiment and writes the results to another Kafka topic. The sentiment analyzer job runs on Spark. The sentiment results are read from Kafka by the API Gateway and delivered back to the Web-App via SSE. All of this is happening in parallel and in real-time.
+The 3 components of the software work together in the following way: The Web-App sends the hashtags which are entered by the user to the API Gateway. The Gateway has an active connection to the Twitter API and updates the rules of the Twitter API to receive a stream of tweets based on the requested hashtags. Those tweets are sent to a Kafka topic. The sentiment analyzer job reads these tweets from the Kafka topic, analyzes their sentiment and writes the results to a different Kafka topic. The sentiment analyzer job runs on Spark. The sentiment results are read from Kafka by the API Gateway and delivered back to the Web-App via SSE. All of this is happening in parallel and in real-time.
 
 The Architecture is based on Kotlin Flow, Reactor, SSE and Spark Structured Streaming:
 - Kotlin Flow, Reactor and Spring are used in the API Gateway.
@@ -24,11 +24,11 @@ If you have any questions about the applications or you need help with running t
 # Dependencies
 Thanks to everyone contributing to any of the following projects:
 - Any Spring project
-- Kafka
 - Reactor
+- Twitter API Client Library for Java
+- Kafka
 - React
 - Material-UI
 - Chart.js
-- Twitter API Client Library for Java
 - Spark, PySpark
 - TextBlob
