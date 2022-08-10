@@ -1,14 +1,19 @@
 # Twitter Stream Processing for Sentiment Analysis
 Analysing the sentiment of live tweet streams.
 
-The `application.properties` file of the API Gateway contains the following properties which you need to set by leveraging your Twitter account: 
-- `twitter.apiKey`
-- `twitter.apiKeySecret`
-- `twitter.token`
+This repository contains a software which leverages stream processing techniques to analyze the sentiment of a live stream of tweets related to given hashtags. The project consists of a Web-App, an API Gateway and a sentiment analyzer job. In the Web-App, the user enters hashtags and submits them to start receiving tweets with those hashtags. A visualization of the real-time sentiment results is shown in the UI, along with the tweets which were analyzed.
 
-These are used to access the Twitter API (receiving a tweet stream, managing the rules for filtering the stream).
+The 3 components of the software work together in the following way: The Web-App sends the hashtags which are entered by the user to the API Gateway. The Gateway has an active connection to the Twitter API and updates the rules of the Twitter API to receive a stream of tweets based on the requested hashtags. Those tweets are sent to a Kafka topic. The sentiment analyzer job reads these tweets from the Kafka topic, analyzes their sentiment and writes the results to a different Kafka topic. The sentiment analyzer job runs on Spark. The sentiment results are read from Kafka by the API Gateway and delivered back to the Web-App via SSE. All of this is happening in parallel and in real-time.
 
-The Deployment folder contains a `docker-compose.yml` file for spinning up most of the necessary infrastructure for a development environment. Note that Spark is not part of the docker-compose setup. 
+The Architecture is based on Kotlin Flow, Reactor, SSE and Spark Structured Streaming:
+- Kotlin Flow, Reactor and Spring are used in the API Gateway.
+- SSE is used for sending the sentiment results from the API Gateway to the Web-App.
+- Spark Structured Streaming, PySpark and TextBlob are used for the sentiment analyzer job.
+- The Web-App is implemented using React.
+
+The `Backend` folder contains the API Gateway and the sentiment analyzer job. The `Deployment/dev` folder contains a `docker-compose.yml` file for spinning up most of the necessary infrastructure for a development environment. Note that Spark is not part of the docker-compose setup. The Web-App can be found in the `Frontend` folder.
+
+The `application.properties` file of the API Gateway contains the property `twitter.token` which you need set to your Twitter token (a bearer token). This is used to access the Twitter API (receiving a tweet stream, managing the rules for filtering the stream).
 
 The `spark-submit` tool can be used to launch the sentiment analyzer via the following command: 
 
@@ -19,11 +24,11 @@ If you have any questions about the applications or you need help with running t
 # Dependencies
 Thanks to everyone contributing to any of the following projects:
 - Any Spring project
-- Kafka
 - Reactor
+- Twitter API Client Library for Java
+- Kafka
 - React
 - Material-UI
 - Chart.js
-- Twitter API Client Library for Java
 - Spark, PySpark
 - TextBlob
